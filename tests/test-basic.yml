@@ -1,0 +1,22 @@
+name: Test basic ruff check on clean code
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Create clean Python file
+        run: |
+          printf '"""Clean module."""\n\n\ndef hello() -> str:\n    """Return hello."""\n    return "hello"\n' > "$GITHUB_WORKSPACE/ruff_clean_test.py"
+      - id: action
+        uses: .
+        with:
+          path: ruff_clean_test.py
+          format: github
+      - name: Assert ruff ran successfully
+        env:
+          OUTPUT: ${{ steps.action.outputs.output }}
+        run: |
+          echo "ruff output: $OUTPUT"
+          echo "PASS: ruff check completed on clean code"

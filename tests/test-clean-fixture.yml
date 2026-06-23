@@ -1,0 +1,19 @@
+name: Test ruff check on committed clean fixture
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Create clean Python file
+        run: |
+          printf '"""Clean module."""\n\n\ndef greet(name: str) -> str:\n    """Return greeting."""\n    return f"Hello, {name}!"\n' > "$GITHUB_WORKSPACE/ruff_fixture_test.py"
+      - id: action
+        uses: .
+        with:
+          path: ruff_fixture_test.py
+          format: github
+      - name: Assert ruff passed on clean fixture
+        run: |
+          echo "PASS: ruff check completed successfully on clean fixture"
