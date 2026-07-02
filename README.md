@@ -1,14 +1,46 @@
-# jpetrucciani/ruff-check
+# ruff-check
 
-GitHub action to run ruff on your python repository
+GitHub Action for [ruff](https://github.com/charliermarsh/ruff)
 
-Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at [https://github.com/jpetrucciani/ruff-check](https://github.com/jpetrucciani/ruff-check).
+## Inputs
 
-## Versions
+### `path`
 
-| Version | Tag | Upstream commit |
-|---------|-----|-----------------|
-| 0.15.15 | [`0.15.15`](https://github.com/chainguard-actions/jpetrucciani-ruff-check/tree/0.15.15) | [`9242ce6`](https://github.com/jpetrucciani/ruff-check/commit/9242ce6085b0c81c0fde720043c95567d33c37e8) |
+The path to run ruff on
+
+**Default** `"."`
+
+### `format`
+
+Format to output ruff messages in
+
+**Default** `"github"`
+
+### `flags`
+
+**Optional** Optional ruff flags (refer to `ruff --help`)
+
+**Default** `""`
+
+## Outputs
+
+None
+
+## Example usage
+
+```yaml
+uses: jpetrucciani/ruff-check@main
+
+# or specify a path!
+uses: jpetrucciani/ruff-check@main
+with:
+  path: '.'
+
+# or specify more flags!
+uses: jpetrucciani/ruff-check@main
+with:
+  flags: '--exclude ./env/'
+```
 
 ## Privacy
 

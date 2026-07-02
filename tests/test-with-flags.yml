@@ -1,0 +1,31 @@
+name: Test ruff check with custom flags
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create clean Python file in workspace
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/flagged_python"
+          cat > "$GITHUB_WORKSPACE/flagged_python/module.py" << 'EOF'
+          """A simple Python module."""
+
+
+          def add(a: int, b: int) -> int:
+              """Add two numbers."""
+              return a + b
+          EOF
+
+      - id: action
+        uses: .
+        with:
+          path: flagged_python
+          flags: '--select E,W'
+          format: github
+
+      - name: Assert ruff ran successfully with flags
+        run: |
+          echo "PASS: ruff check with --select E,W flags completed successfully"
