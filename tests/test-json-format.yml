@@ -1,4 +1,4 @@
-name: Test JSON format output
+name: Test json output format
 on:
   workflow_dispatch:
 jobs:
@@ -6,14 +6,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
       - id: action
         uses: .
         with:
-          path: tests/fixtures/clean.py
+          path: tests/fixtures/unused_import.py
           format: json
-      - name: Assert ruff ran successfully with json format
+        continue-on-error: true
+
+      - name: Assert action failed and output format was json
         env:
-          ACTUAL: ${{ steps.action.outputs.output }}
+          OUTCOME: ${{ steps.action.outcome }}
         run: |
-          echo "actual: $ACTUAL"
-          echo "PASS: ruff completed with json format on clean Python file"
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" != "failure" ]; then
+            echo "FAIL: expected action to fail on file with lint issues (json format), but outcome was: $OUTCOME"
+            exit 1
+          fi
+          echo "PASS: action correctly failed with json format"

@@ -1,4 +1,4 @@
-name: Test custom flags - select specific rules
+name: Test lint failure - Python file with issues
 on:
   workflow_dispatch:
 jobs:
@@ -10,18 +10,17 @@ jobs:
       - id: action
         uses: .
         with:
-          path: tests/fixtures/unused_import.py
-          flags: '--select F401'
+          path: tests/fixtures/bad.py
           format: github
         continue-on-error: true
 
-      - name: Assert action failed due to unused import (F401)
+      - name: Assert action failed due to lint issues
         env:
           OUTCOME: ${{ steps.action.outcome }}
         run: |
           echo "outcome: $OUTCOME"
           if [ "$OUTCOME" != "failure" ]; then
-            echo "FAIL: expected action to fail on unused import with --select F401, but outcome was: $OUTCOME"
+            echo "FAIL: expected action to fail on file with lint issues, but outcome was: $OUTCOME"
             exit 1
           fi
-          echo "PASS: action correctly detected unused import with custom --select flag"
+          echo "PASS: action correctly failed on file with lint issues"

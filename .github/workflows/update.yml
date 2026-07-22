@@ -1,14 +1,15 @@
 name: check for ruff updates
 on: {workflow_dispatch, schedule: [cron: '0 */6 * * *']}
 
-permissions:
-  contents: write
-  pull-requests: write
+permissions: {}
 
 jobs:
   check-for-updates:
     runs-on: ubuntu-22.04
     name: check for ruff updates
+    permissions:
+      contents: write
+      pull-requests: write
     env:
       GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
     steps:

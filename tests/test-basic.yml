@@ -6,14 +6,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
       - id: action
         uses: .
         with:
           path: tests/fixtures/clean.py
           format: github
-      - name: Assert ruff ran successfully on clean file
+
+      - name: Assert action succeeded (no lint issues)
         env:
-          ACTUAL: ${{ steps.action.outputs.output }}
+          OUTCOME: ${{ steps.action.outcome }}
         run: |
-          echo "actual: $ACTUAL"
-          echo "PASS: ruff completed successfully on clean Python file"
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" != "success" ]; then
+            echo "FAIL: expected action to succeed on clean file, but outcome was: $OUTCOME"
+            exit 1
+          fi
+          echo "PASS: action correctly passed on clean Python file"

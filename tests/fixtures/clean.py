@@ -1,4 +1,4 @@
-"""A clean Python module that passes ruff checks."""
+"""A clean Python module."""
 
 
 def add(a: int, b: int) -> int:
@@ -6,6 +6,11 @@ def add(a: int, b: int) -> int:
     return a + b
 
 
-def greet(name: str) -> str:
-    """Return a greeting string."""
-    return f"Hello, {name}!"
+def main() -> None:
+    """Main entry point."""
+    result = add(1, 2)
+    print(result)
+
+
+if __name__ == "__main__":
+    main()
