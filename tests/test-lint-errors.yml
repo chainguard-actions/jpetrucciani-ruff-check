@@ -1,0 +1,28 @@
+name: Test lint errors detection
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - id: ruff
+        uses: .
+        with:
+          path: tests/fixtures/bad_python
+          format: github
+        continue-on-error: true
+
+      - name: Assert ruff detected errors
+        env:
+          OUTCOME: ${{ steps.ruff.outcome }}
+          OUTPUT: ${{ steps.ruff.outputs.output }}
+        run: |
+          echo "ruff outcome: $OUTCOME"
+          echo "ruff output: $OUTPUT"
+          if [ "$OUTCOME" != "failure" ]; then
+            echo "FAIL: expected ruff to fail on code with lint errors, but outcome was '$OUTCOME'"
+            exit 1
+          fi
+          echo "PASS: ruff correctly detected lint errors"

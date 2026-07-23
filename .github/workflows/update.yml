@@ -1,0 +1,40 @@
+name: check for ruff updates
+on: {workflow_dispatch, schedule: [cron: '0 */6 * * *']}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check-for-updates:
+    runs-on: ubuntu-22.04
+    name: check for ruff updates
+    env:
+      GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+    steps:
+      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+      - name: setup python
+        uses: actions/setup-python@e9aba2c848f5ebd159c070c61ea2c4e2b122355e # v2
+        with:
+          python-version: '3.10'
+          architecture: x64
+      - id: version
+        name: check version
+        run: |
+          pip install -U ruff
+          pip freeze | grep 'ruff==' >requirements.txt
+          version="$(sed -E 's#ruff==(.*)#\1#g' ./requirements.txt)"
+          echo "version=$version" >>$GITHUB_OUTPUT
+          echo "message=automatic ruff update [$version]" >>$GITHUB_OUTPUT
+      - uses: peter-evans/create-pull-request@9825ae65b1cb54b543b938503728b432a0176d29 # v3.10.0
+        id: new_pull_request
+        with:
+          delete-branch: true
+          title: ${{ steps.version.outputs.message }}
+          commit-message: ${{ steps.version.outputs.message }}
+          branch: automatic-ruff-update
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+      - if: steps.new_pull_request.outputs.pull-request-url != ''
+        env:
+          PR_URL: ${{ steps.new_pull_request.outputs.pull-request-url }}
+        run: gh pr merge --auto --squash "$PR_URL"

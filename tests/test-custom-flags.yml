@@ -1,4 +1,4 @@
-name: Test basic usage - clean Python code
+name: Test custom flags and format
 on:
   workflow_dispatch:
 jobs:
@@ -11,11 +11,12 @@ jobs:
         uses: .
         with:
           path: tests/fixtures/clean_python
+          flags: '--select F'
           format: github
 
-      - name: Assert ruff ran successfully on clean code
+      - name: Assert ruff ran with custom flags
         env:
           OUTPUT: ${{ steps.ruff.outputs.output }}
         run: |
           echo "ruff output: $OUTPUT"
-          echo "PASS: ruff completed without errors on clean code"
+          echo "PASS: ruff completed with custom flags"
