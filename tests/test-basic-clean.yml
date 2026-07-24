@@ -1,0 +1,34 @@
+name: Test basic clean Python code
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create clean Python file
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/tests/fixtures/clean"
+          cat > "$GITHUB_WORKSPACE/tests/fixtures/clean/hello.py" << 'EOF'
+          def hello(name: str) -> str:
+              """Return a greeting."""
+              return f"Hello, {name}!"
+
+
+          if __name__ == "__main__":
+              print(hello("world"))
+          EOF
+
+      - id: action
+        uses: .
+        with:
+          path: tests/fixtures/clean
+          format: github
+
+      - name: Assert ruff passed on clean code
+        env:
+          ACTUAL: ${{ steps.action.outputs.output }}
+        run: |
+          echo "actual: $ACTUAL"
+          echo "PASS: ruff ran successfully on clean Python code"

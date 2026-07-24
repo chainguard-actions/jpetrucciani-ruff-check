@@ -1,0 +1,31 @@
+name: Test ruff with custom flags and format
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create clean Python file for custom flags test
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/tests/fixtures/custom"
+          cat > "$GITHUB_WORKSPACE/tests/fixtures/custom/sample.py" << 'EOF'
+          def add(a: int, b: int) -> int:
+              """Add two numbers."""
+              return a + b
+          EOF
+
+      - id: action
+        uses: .
+        with:
+          path: tests/fixtures/custom
+          flags: '--select E,W'
+          format: json
+
+      - name: Assert ruff ran with custom flags successfully
+        env:
+          ACTUAL: ${{ steps.action.outputs.output }}
+        run: |
+          echo "actual: $ACTUAL"
+          echo "PASS: ruff ran successfully with custom flags and json format"
