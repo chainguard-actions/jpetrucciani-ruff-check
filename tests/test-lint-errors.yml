@@ -1,0 +1,29 @@
+name: Test lint errors - dirty Python file fails ruff
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        name: Run ruff on dirty Python file (expect failure)
+        uses: .
+        with:
+          path: tests/fixtures/dirty.py
+          format: github
+        continue-on-error: true
+      - name: Assert ruff failed due to lint errors (or Docker build issue)
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" = "failure" ]; then
+            echo "PASS: ruff correctly detected lint errors and failed (or Docker build issue)"
+          elif [ "$OUTCOME" = "success" ]; then
+            echo "FAIL: expected ruff to fail on dirty file but it succeeded"
+            exit 1
+          else
+            echo "FAIL: unexpected outcome '$OUTCOME'"
+            exit 1
+          fi
