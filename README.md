@@ -14,6 +14,7 @@ Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at
 | 0.16.0 | [`0.16.0`](https://github.com/chainguard-actions/jpetrucciani-ruff-check/tree/0.16.0) | [`2211154`](https://github.com/jpetrucciani/ruff-check/commit/22111541002fb09b5e8baa433b4720cfe1596968) |
 | 0.16.1 | [`0.16.1`](https://github.com/chainguard-actions/jpetrucciani-ruff-check/tree/0.16.1) | [`111fc90`](https://github.com/jpetrucciani/ruff-check/commit/111fc907cf8b520a1d943e34d61a326e1ee4a0be) |
 | 0.16.2 | [`0.16.2`](https://github.com/chainguard-actions/jpetrucciani-ruff-check/tree/0.16.2) | [`8fb4dde`](https://github.com/jpetrucciani/ruff-check/commit/8fb4ddee3800f362b71ae5f47694237adcb755d9) |
+| 0.16.3 | [`0.16.3`](https://github.com/chainguard-actions/jpetrucciani-ruff-check/tree/0.16.3) | [`7c78fa9`](https://github.com/jpetrucciani/ruff-check/commit/7c78fa94d8a52fa3e76fc5e38242b93337669366) |
 
 ## Privacy
 
