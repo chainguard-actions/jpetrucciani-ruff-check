@@ -1,0 +1,24 @@
+name: Test lint error - dirty Python file fails ruff check
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          path: tests/fixtures/dirty.py
+          format: concise
+        continue-on-error: true
+      - name: Assert ruff failed on dirty file
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" != "failure" ]; then
+            echo "FAIL: expected ruff to fail on dirty file, but outcome was '$OUTCOME'"
+            exit 1
+          fi
+          echo "PASS: ruff correctly failed on dirty Python file"
