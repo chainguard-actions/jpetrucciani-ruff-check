@@ -1,0 +1,32 @@
+name: Test custom flags - select specific rules
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create Python file for flag testing
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/tests/fixtures/flagtest"
+          cat > "$GITHUB_WORKSPACE/tests/fixtures/flagtest/module.py" << 'EOF'
+          """A simple Python module for flag testing."""
+
+
+          def add(a: int, b: int) -> int:
+              """Add two numbers."""
+              return a + b
+          EOF
+
+      - id: action
+        uses: .
+        with:
+          path: tests/fixtures/flagtest
+          flags: '--select E'
+          format: github
+
+      - name: Assert ruff ran with custom flags on clean code
+        run: |
+          echo "outcome: ${{ steps.action.outcome }}"
+          echo "PASS: ruff ran successfully with custom --select flag on clean code"

@@ -1,0 +1,40 @@
+name: Test text output format
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create Python file with a lint error for text format test
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/tests/fixtures/textformat"
+          cat > "$GITHUB_WORKSPACE/tests/fixtures/textformat/sample.py" << 'EOF'
+          import os
+          x = 1
+          EOF
+
+      - id: action
+        uses: .
+        continue-on-error: true
+        with:
+          path: tests/fixtures/textformat
+          format: text
+
+      - name: Assert ruff ran with text format and detected issues
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+          OUTPUT: ${{ steps.action.outputs.output }}
+        run: |
+          echo "outcome: $OUTCOME"
+          echo "output: $OUTPUT"
+          if [ "$OUTCOME" = "failure" ]; then
+            echo "PASS: ruff correctly detected lint errors in text format"
+          elif [ "$OUTCOME" = "success" ]; then
+            echo "FAIL: ruff should have detected unused import but succeeded"
+            exit 1
+          else
+            echo "FAIL: unexpected outcome '$OUTCOME'"
+            exit 1
+          fi
