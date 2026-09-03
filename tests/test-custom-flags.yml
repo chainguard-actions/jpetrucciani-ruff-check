@@ -1,0 +1,24 @@
+name: Test custom flags - select specific rules
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          path: tests/fixtures/clean.py
+          flags: '--select E'
+          format: github
+      - name: Assert ruff ran with custom flags and found no errors
+        env:
+          OUTPUT: ${{ steps.action.outputs.output }}
+        run: |
+          echo "output: '$OUTPUT'"
+          if [ -n "$OUTPUT" ]; then
+            echo "FAIL: expected no ruff output for clean file with --select E, got: $OUTPUT"
+            exit 1
+          fi
+          echo "PASS: ruff ran with custom flags and found no issues"
