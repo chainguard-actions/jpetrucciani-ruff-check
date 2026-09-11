@@ -1,0 +1,54 @@
+name: Test custom flags
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - id: action-select-f401
+        uses: .
+        continue-on-error: true
+        with:
+          path: tests/fixtures/flags
+          flags: '--select F401'
+          format: github
+
+      - name: Assert ruff detected unused import with F401 rule
+        env:
+          OUTCOME: ${{ steps.action-select-f401.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" = "failure" ]; then
+            echo "PASS: ruff correctly detected unused import (F401)"
+          elif [ "$OUTCOME" = "success" ]; then
+            echo "FAIL: expected ruff to detect unused import with --select F401"
+            exit 1
+          else
+            echo "FAIL: unexpected outcome '$OUTCOME'"
+            exit 1
+          fi
+
+      - id: action-clean
+        uses: .
+        continue-on-error: true
+        with:
+          path: tests/fixtures/flags-clean
+          flags: '--select E,F'
+          format: github
+
+      - name: Assert ruff passes on clean code with E,F rules
+        env:
+          OUTCOME: ${{ steps.action-clean.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" = "success" ]; then
+            echo "PASS: ruff passed on clean code with E,F rules"
+          elif [ "$OUTCOME" = "failure" ]; then
+            echo "FAIL: expected success but ruff failed on clean code"
+            exit 1
+          else
+            echo "FAIL: unexpected outcome '$OUTCOME'"
+            exit 1
+          fi
