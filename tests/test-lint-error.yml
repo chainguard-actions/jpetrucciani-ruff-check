@@ -1,0 +1,41 @@
+name: Test lint error - ruff fails on bad Python code
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create Python file with lint errors inside workspace
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/ruff-test-errors"
+          cat > "$GITHUB_WORKSPACE/ruff-test-errors/bad.py" << 'EOF'
+          import os
+          import sys
+          x=1
+          y = 2
+          print(x,y)
+          EOF
+
+      - id: action
+        uses: .
+        continue-on-error: true
+        with:
+          path: ruff-test-errors
+          format: github
+
+      - name: Assert ruff failed on bad code
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" = "failure" ]; then
+            echo "PASS: ruff correctly detected lint errors and failed"
+          elif [ "$OUTCOME" = "success" ]; then
+            echo "FAIL: ruff should have failed on code with lint errors"
+            exit 1
+          else
+            echo "FAIL: unexpected outcome '$OUTCOME'"
+            exit 1
+          fi

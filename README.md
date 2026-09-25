@@ -1,25 +1,46 @@
-# jpetrucciani/ruff-check
+# ruff-check
 
-GitHub action to run ruff on your python repository
+GitHub Action for [ruff](https://github.com/charliermarsh/ruff)
 
-Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at [https://github.com/jpetrucciani/ruff-check](https://github.com/jpetrucciani/ruff-check).
+## Inputs
 
-## Versions
+### `path`
 
-| Version | Tag | Upstream commit |
-|---------|-----|-----------------|
-| 0.15.15 | [`0.15.15`](https://github.com/chainguard-actions/jpetrucciani-ruff-check/tree/0.15.15) | [`9242ce6`](https://github.com/jpetrucciani/ruff-check/commit/9242ce6085b0c81c0fde720043c95567d33c37e8) |
-| 0.15.20 | [`0.15.20`](https://github.com/chainguard-actions/jpetrucciani-ruff-check/tree/0.15.20) | [`ad9b7d7`](https://github.com/jpetrucciani/ruff-check/commit/ad9b7d77966567dc99ffbcfe720ab8cb569dbfbd) |
-| 0.15.21 | [`0.15.21`](https://github.com/chainguard-actions/jpetrucciani-ruff-check/tree/0.15.21) | [`4ec4a0d`](https://github.com/jpetrucciani/ruff-check/commit/4ec4a0db277402a166547ee3d8f5a4aae43d3aae) |
-| 0.16.0 | [`0.16.0`](https://github.com/chainguard-actions/jpetrucciani-ruff-check/tree/0.16.0) | [`2211154`](https://github.com/jpetrucciani/ruff-check/commit/22111541002fb09b5e8baa433b4720cfe1596968) |
-| 0.16.1 | [`0.16.1`](https://github.com/chainguard-actions/jpetrucciani-ruff-check/tree/0.16.1) | [`111fc90`](https://github.com/jpetrucciani/ruff-check/commit/111fc907cf8b520a1d943e34d61a326e1ee4a0be) |
-| 0.16.2 | [`0.16.2`](https://github.com/chainguard-actions/jpetrucciani-ruff-check/tree/0.16.2) | [`8fb4dde`](https://github.com/jpetrucciani/ruff-check/commit/8fb4ddee3800f362b71ae5f47694237adcb755d9) |
-| 0.16.3 | [`0.16.3`](https://github.com/chainguard-actions/jpetrucciani-ruff-check/tree/0.16.3) | [`7c78fa9`](https://github.com/jpetrucciani/ruff-check/commit/7c78fa94d8a52fa3e76fc5e38242b93337669366) |
-| 0.16.4 | [`0.16.4`](https://github.com/chainguard-actions/jpetrucciani-ruff-check/tree/0.16.4) | [`23311c1`](https://github.com/jpetrucciani/ruff-check/commit/23311c14e87f45d8c76b896f6b1782ebbedb9bf3) |
-| 0.16.5 | [`0.16.5`](https://github.com/chainguard-actions/jpetrucciani-ruff-check/tree/0.16.5) | [`25af140`](https://github.com/jpetrucciani/ruff-check/commit/25af140acf65b3975b8949357bb4f17397678bf3) |
-| 0.16.6 | [`0.16.6`](https://github.com/chainguard-actions/jpetrucciani-ruff-check/tree/0.16.6) | [`b4e92fc`](https://github.com/jpetrucciani/ruff-check/commit/b4e92fcaaa872115caa3bb205322eed8607d2989) |
-| 0.16.7 | [`0.16.7`](https://github.com/chainguard-actions/jpetrucciani-ruff-check/tree/0.16.7) | [`ea44ab3`](https://github.com/jpetrucciani/ruff-check/commit/ea44ab36606b9abc19f75b902a627fdd62379daf) |
-| 0.16.8 | [`0.16.8`](https://github.com/chainguard-actions/jpetrucciani-ruff-check/tree/0.16.8) | [`8af19c5`](https://github.com/jpetrucciani/ruff-check/commit/8af19c59b6c87a42880755fec0b920e1d83ac10d) |
+The path to run ruff on
+
+**Default** `"."`
+
+### `format`
+
+Format to output ruff messages in
+
+**Default** `"github"`
+
+### `flags`
+
+**Optional** Optional ruff flags (refer to `ruff --help`)
+
+**Default** `""`
+
+## Outputs
+
+None
+
+## Example usage
+
+```yaml
+uses: jpetrucciani/ruff-check@main
+
+# or specify a path!
+uses: jpetrucciani/ruff-check@main
+with:
+  path: '.'
+
+# or specify more flags!
+uses: jpetrucciani/ruff-check@main
+with:
+  flags: '--exclude ./env/'
+```
 
 ## Privacy
 

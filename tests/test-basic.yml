@@ -1,0 +1,39 @@
+name: Test basic usage - clean Python code
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create clean Python file inside workspace
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/ruff-test-clean"
+          cat > "$GITHUB_WORKSPACE/ruff-test-clean/clean.py" << 'EOF'
+          """A clean Python module."""
+
+
+          def add(a: int, b: int) -> int:
+              """Add two numbers."""
+              return a + b
+
+
+          def main() -> None:
+              """Main entry point."""
+              result = add(1, 2)
+              print(result)
+          EOF
+
+      - id: action
+        uses: .
+        with:
+          path: ruff-test-clean
+          format: github
+
+      - name: Assert ruff ran successfully on clean code
+        env:
+          OUTPUT: ${{ steps.action.outputs.output }}
+        run: |
+          echo "output: $OUTPUT"
+          echo "PASS: ruff check completed successfully on clean Python code"

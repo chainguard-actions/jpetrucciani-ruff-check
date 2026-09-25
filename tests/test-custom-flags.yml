@@ -1,0 +1,76 @@
+name: Test custom flags - ruff with select flag
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create Python file with unused import inside workspace
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/ruff-test-flags"
+          cat > "$GITHUB_WORKSPACE/ruff-test-flags/unused_import.py" << 'EOF'
+          """Module with unused import."""
+          import os
+
+
+          def hello() -> str:
+              """Return greeting."""
+              return "hello"
+          EOF
+
+      - name: Run ruff with --select F401 to catch unused imports
+        id: action-select
+        uses: .
+        continue-on-error: true
+        with:
+          path: ruff-test-flags
+          flags: '--select F401'
+          format: github
+
+      - name: Assert ruff detected unused import with --select F401
+        env:
+          OUTCOME: ${{ steps.action-select.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" = "failure" ]; then
+            echo "PASS: ruff correctly detected unused import (F401) with --select flag"
+          elif [ "$OUTCOME" = "success" ]; then
+            echo "FAIL: ruff should have detected the unused 'import os' with --select F401"
+            exit 1
+          else
+            echo "FAIL: unexpected outcome '$OUTCOME'"
+            exit 1
+          fi
+
+      - name: Create clean Python file inside workspace
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/ruff-test-flags-clean"
+          cat > "$GITHUB_WORKSPACE/ruff-test-flags-clean/short_lines.py" << 'EOF'
+          """Short lines only."""
+
+
+          def greet() -> str:
+              """Greet."""
+              return "hi"
+          EOF
+
+      - id: action-clean-select
+        uses: .
+        with:
+          path: ruff-test-flags-clean
+          flags: '--select E501'
+          format: github
+
+      - name: Assert ruff passed with --select E501 on short-line file
+        env:
+          OUTCOME: ${{ steps.action-clean-select.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" = "success" ]; then
+            echo "PASS: ruff passed with --select E501 on file with short lines"
+          else
+            echo "FAIL: expected success but got '$OUTCOME'"
+            exit 1
+          fi
