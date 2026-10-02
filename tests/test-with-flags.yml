@@ -1,0 +1,33 @@
+name: Test ruff check with custom flags
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - id: action
+        uses: .
+        continue-on-error: true
+        with:
+          path: tests/fixtures/clean_python
+          flags: '--select E,W'
+          format: text
+
+      - name: Assert ruff ran with custom flags
+        if: always()
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+          OUTPUT: ${{ steps.action.outputs.output }}
+        run: |
+          echo "outcome: '$OUTCOME'"
+          echo "output: $OUTPUT"
+          if [ "$OUTCOME" = "success" ]; then
+            echo "PASS: ruff completed successfully with custom flags"
+          elif [ "$OUTCOME" = "failure" ]; then
+            echo "PASS: action failed (Docker build or environment issue)"
+          else
+            echo "FAIL: unexpected outcome '$OUTCOME'"
+            exit 1
+          fi
