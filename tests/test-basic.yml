@@ -1,0 +1,23 @@
+name: Test basic usage - clean Python code
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          path: tests/fixtures/clean
+          format: github
+      - name: Assert output is empty (no lint errors)
+        env:
+          ACTUAL: ${{ steps.action.outputs.output }}
+        run: |
+          echo "actual: '$ACTUAL'"
+          if [ -n "$ACTUAL" ]; then
+            echo "FAIL: expected no ruff output for clean code, got: $ACTUAL"
+            exit 1
+          fi
+          echo "PASS: ruff found no issues in clean code"
