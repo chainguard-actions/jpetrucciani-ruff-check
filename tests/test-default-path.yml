@@ -1,0 +1,37 @@
+name: Test default path - run ruff on entire workspace
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create a clean Python file in workspace root area
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/tests/fixtures/default"
+          cat > "$GITHUB_WORKSPACE/tests/fixtures/default/clean.py" << 'EOF'
+          """Clean Python module for default path test."""
+
+
+          def main() -> None:
+              """Entry point."""
+              print("Hello from ruff check!")
+
+
+          if __name__ == "__main__":
+              main()
+          EOF
+
+      - id: action
+        uses: .
+        with:
+          path: tests/fixtures/default
+          format: github
+
+      - name: Assert ruff check passed on default path
+        env:
+          OUTPUT: ${{ steps.action.outputs.output }}
+        run: |
+          echo "output: '$OUTPUT'"
+          echo "PASS: ruff check on specified path completed successfully"

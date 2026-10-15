@@ -1,0 +1,34 @@
+name: Test custom flags - select specific rules and json format
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create a Python file that passes E rules
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/tests/fixtures/custom"
+          cat > "$GITHUB_WORKSPACE/tests/fixtures/custom/module.py" << 'EOF'
+          """Module with only whitespace/style issues, no unused imports."""
+
+
+          def add(a: int, b: int) -> int:
+              """Add two numbers."""
+              return a + b
+          EOF
+
+      - id: action
+        uses: .
+        with:
+          path: tests/fixtures/custom
+          flags: '--select E'
+          format: json
+
+      - name: Assert ruff check passed with custom flags
+        env:
+          OUTPUT: ${{ steps.action.outputs.output }}
+        run: |
+          echo "output: '$OUTPUT'"
+          echo "PASS: ruff check with custom --select E flag and json format completed successfully"
