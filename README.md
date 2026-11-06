@@ -26,6 +26,7 @@ Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at
 | 0.17.1 | [`0.17.1`](https://github.com/chainguard-actions/jpetrucciani-ruff-check/tree/0.17.1) | [`b3e1906`](https://github.com/jpetrucciani/ruff-check/commit/b3e19066bdc86d5006fef8360f90da82b474f573) | [`HARDENING.md`](https://github.com/chainguard-actions/jpetrucciani-ruff-check/blob/0.17.1/HARDENING.md) |
 | 0.17.2 | [`0.17.2`](https://github.com/chainguard-actions/jpetrucciani-ruff-check/tree/0.17.2) | [`d2702a6`](https://github.com/jpetrucciani/ruff-check/commit/d2702a64d9421201050d0ac8ecaba9a074d2a4da) | [`HARDENING.md`](https://github.com/chainguard-actions/jpetrucciani-ruff-check/blob/0.17.2/HARDENING.md) |
 | 0.17.3 | [`0.17.3`](https://github.com/chainguard-actions/jpetrucciani-ruff-check/tree/0.17.3) | [`d436867`](https://github.com/jpetrucciani/ruff-check/commit/d4368676a5babaea1ecc823deb2f9b943cce2ecf) | [`HARDENING.md`](https://github.com/chainguard-actions/jpetrucciani-ruff-check/blob/0.17.3/HARDENING.md) |
+| 0.17.4 | [`0.17.4`](https://github.com/chainguard-actions/jpetrucciani-ruff-check/tree/0.17.4) | [`8d2b39d`](https://github.com/jpetrucciani/ruff-check/commit/8d2b39daadb846de475981360980a99f39f1f534) | [`HARDENING.md`](https://github.com/chainguard-actions/jpetrucciani-ruff-check/blob/0.17.4/HARDENING.md) |
 
 ## Privacy
 
